@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+mysql:
+image: mysql:8
+container_name: mysql-reservation
+environment:
+MYSQL_ROOT_PASSWORD: password
+MYSQL_DATABASE: ReservationVoyage
+ports:
+- "3306:3306"
+volumes:
+- ./mysql-data:/var/lib/mysql
+postgres:
+image: postgres:16
+container_name: postgres-reservation
+environment:
+POSTGRES_USER: postgres
+POSTGRES_PASSWORD: password
+POSTGRES_DB: postgres
+ports:
+- "5432:5432"
+volumes:
+- ./pg-data:/var/lib/postgresql/data
+Lancement des services :
+docker compose up -d
