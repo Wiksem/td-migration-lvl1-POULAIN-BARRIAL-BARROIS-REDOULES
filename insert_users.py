@@ -3,11 +3,11 @@ from faker import Faker
 import random
 import string
 
-# Config connexion MySQL
+
 conn = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="vNh$AlLXYZ@1Kl",  # remplace par ton mdp
+    password="",
     database="ReservationVoyage"
 )
 
