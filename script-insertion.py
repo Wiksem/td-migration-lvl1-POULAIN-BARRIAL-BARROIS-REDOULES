@@ -25,13 +25,14 @@ for _ in range(500):
     prenom = fake.first_name()
     email = fake.unique.email()
     motdepasse = fake.password(length=12)
+    datedecreation = fake.date_between(start_date="-3y", end_date="today")
 
     cursor.execute(
         """
-        INSERT INTO Utilisateurs (Nom, Prenom, Email, MotDePasse)
-        VALUES (%s, %s, %s, %s)
+        INSERT INTO Utilisateurs (Nom, Prenom, Email, MotDePasse, DateDecreation)
+        VALUES (%s, %s, %s, %s, %s)
         """,
-        (nom, prenom, email, motdepasse)
+        (nom, prenom, email, motdepasse, datedecreation)
     )
     users_ids.append(cursor.lastrowid)
 
@@ -49,7 +50,7 @@ for _ in range(1000):
     utilisateur_id = random.choice(users_ids)
     destination = random.choice(destinations)
     date_reservation = fake.date_between(start_date="-1y", end_date="today")
-    prix = round(random.uniform(80, 1500), 2)
+    prix = round(random.uniform(10, 99.99), 2)
 
     cursor.execute(
         """

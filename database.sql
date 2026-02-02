@@ -1,3 +1,5 @@
+DROP DATABASE IF EXISTS ReservationVoyage;
+
 CREATE DATABASE ReservationVoyage
 DEFAULT CHARACTER SET utf8mb4
 COLLATE utf8mb4_unicode_ci;
@@ -10,7 +12,7 @@ CREATE TABLE Utilisateurs (
     Prenom VARCHAR(100) NOT NULL,
     Email VARCHAR(255) NOT NULL,
     MotDePasse VARCHAR(255) NOT NULL,
-    DateDecreation DATE NOT NULL,
+    DateDecreation DATE NOT NULL
 );
 
 CREATE TABLE Reservations (
