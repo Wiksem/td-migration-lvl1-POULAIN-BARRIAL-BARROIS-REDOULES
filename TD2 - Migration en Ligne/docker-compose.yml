@@ -1,0 +1,77 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: gt_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: globetrotter
+      MYSQL_USER: gt_user
+      MYSQL_PASSWORD: gt_pass
+    ports:
+      - "3307:3306"
+    command: ["mysqld", "--default-authentication-plugin=mysql_native_password"]
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - gt_network
+
+  postgres:
+    image: postgres:16
+    container_name: gt_postgres
+    environment:
+      POSTGRES_USER: gt_user
+      POSTGRES_PASSWORD: gt_pass
+      POSTGRES_DB: globetrotter
+    ports:
+      - "5433:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - gt_network
+
+  flyway:
+    image: flyway/flyway:10
+    container_name: gt_flyway
+    depends_on:
+      - postgres
+    volumes:
+      - ./flyway/sql:/flyway/sql
+      - ./flyway/conf:/flyway/conf
+    command:
+      - "-configFiles=/flyway/conf/flyway.conf"
+      - "migrate"
+    networks:
+      - gt_network
+
+  app_faker:
+    build: ./app_faker
+    container_name: gt_app_faker
+    depends_on:
+      - mysql
+    working_dir: /app
+    command: ["python", "faker_traffic.py"]
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - gt_network
+
+  app_cdc:
+    build: ./app_cdc
+    container_name: gt_app_cdc
+    depends_on:
+      - mysql
+      - postgres
+    working_dir: /app
+    command: ["python", "cdc_replication.py"]
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - gt_network
+
+networks:
+  gt_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  pg_data:
